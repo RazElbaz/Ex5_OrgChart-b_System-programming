@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,7 +8,6 @@
 #include <queue>
 #include <vector>
 using namespace std;
-
 namespace ariel {
     class OrgChart {
     private:
@@ -17,26 +15,70 @@ namespace ariel {
         vector<Node*>children;
         int index;
         bool LookFor(Node *root,const string &father,const string &son);
+
     public:
+        //----------------------------------------
+        // constructors
+        //----------------------------------------
         //contracture
         OrgChart(){
             this->root.Name= "";
             this->index=0;
         }
+        //deep copy
         OrgChart(OrgChart &other){
-            this->root=other.root;
-            this->children=other.children;
+            if(!other.root.Name.empty()){ this->root=other.root;}
+            for (int i = 0; i < other.root.Sons.size(); ++i) {
+                Node* curr=other.root.Sons[(size_t)i];
+                this->root.Sons[(size_t )i]=curr;
+                for (int j = 0; j < curr->Sons.size(); ++j) {
+                    this->children[(size_t )j]=other.children[(size_t )j];
+                }
+            }
             this->index=other.index;
         }
-        //https://www.educative.io/edpresso/what-is-a-move-constructor-in-cpp
-        //Move constructors
+        //Move constructors, credit: https://www.educative.io/edpresso/what-is-a-move-constructor-in-cpp
         OrgChart(OrgChart &&other)noexcept{
             this->root=other.root;
             this->children=other.children;
             this->index=other.index;
         }
-        OrgChart& operator=(OrgChart &&other)noexcept;
-        OrgChart& operator=(const OrgChart &other);
+
+        //----------------------------------------
+        // operators
+        //----------------------------------------
+        //https://en.cppreference.com/w/cpp/language/move_assignment
+        //move operator in C++ : the move assignment operator = is used for transferring a temporary object to an existing object
+        OrgChart& operator=(OrgChart &&other)noexcept=default;
+        OrgChart& operator=(const OrgChart &other){
+            if (this==&other){
+                return *this;}
+            //I was helped by Lecture 5
+            //delete these children
+            for(Node* node: this->children){
+                removeOrgChart(node);
+            }
+            //copy
+            for (int i = 0; i < other.root.Sons.size(); ++i) {
+                Node* curr=other.root.Sons[(size_t)i];
+                this->root.Sons[(size_t )i]=curr;
+                for (int j = 0; j < curr->Sons.size(); ++j) {
+                    this->children[(size_t )j]=other.children[(size_t )j];
+                }
+            }
+            return *this;
+        }
+        void removeOrgChart(Node* node_del) {
+            if (node_del != nullptr) {
+            for (int i = 0; i < node_del->Sons.size(); ++i) {
+                removeOrgChart(node_del->Sons[(size_t)i]);
+            }
+            delete node_del;
+        }
+        }
+        //----------------------------------------
+        //  Functions
+        //----------------------------------------
         OrgChart &add_root(string name);
         OrgChart &add_sub(const string &nameONE,const string &nameTWO);
         friend ostream &operator<<(ostream &output, OrgChart &start);
