@@ -2,11 +2,17 @@
 using namespace std;
 namespace ariel {
     OrgChart &OrgChart::add_root(string name) {
+        if (name.empty() || name == "\t"|| name == "\r" || name == "\n"|| name == " " ){
+            throw invalid_argument("One or both of the strings are invalid");
+        }
         this->root.Name = move(name);
         return *this;
     }
 
     OrgChart &OrgChart::add_sub(const string &nameONE, const string &nameTWO) {
+        if (nameONE.empty() || nameTWO.empty() || nameONE == "\t" || nameTWO == "\t"|| nameTWO == "\r" || nameONE == "\r"|| nameTWO == "\n" || nameTWO == "\n"|| nameONE == " " || nameTWO == " " ){
+            throw invalid_argument("One or both of the strings are invalid");
+        }
         if (!LookFor(&this->root, nameONE, nameTWO)) {
             throw runtime_error("The first person the Knesset does not exist in the organization tree!") ;
         }

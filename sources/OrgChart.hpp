@@ -23,8 +23,18 @@ namespace ariel {
             this->root.Name= "";
             this->index=0;
         }
-        OrgChart(OrgChart &other);
-        OrgChart(OrgChart &&other)noexcept;
+        OrgChart(OrgChart &other){
+            this->root=other.root;
+            this->children=other.children;
+            this->index=other.index;
+        }
+        //https://www.educative.io/edpresso/what-is-a-move-constructor-in-cpp
+        //Move constructors
+        OrgChart(OrgChart &&other)noexcept{
+            this->root=other.root;
+            this->children=other.children;
+            this->index=other.index;
+        }
         OrgChart& operator=(OrgChart &&other)noexcept;
         OrgChart& operator=(const OrgChart &other);
         OrgChart &add_root(string name);
