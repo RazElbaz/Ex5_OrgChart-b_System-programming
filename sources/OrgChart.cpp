@@ -1,8 +1,7 @@
 #include "OrgChart.hpp"
 using namespace std;
 namespace ariel {
-    //---------------------------------------------------
-    //-----------------adding functions------------------
+    //------------------------------------------------------adding functions-------------------------------------------
     OrgChart &OrgChart::add_root(string name) {
         /***
          * Gets one input and puts it at the root of the tree. If there is already something in the root, it is replaced.
@@ -16,8 +15,9 @@ namespace ariel {
 
     OrgChart &OrgChart::add_sub(const string &nameONE, const string &nameTWO) {
         /***
-         * add_sub receives two inputs. A person (or department) that already exists in the organizational structure and another person
-         * (or another department) who report to the first person and are below him in the organizational hierarchy.
+         * add_sub receives two inputs. A person (or department) that already exists in the organizational structure and
+         * another person(or another department) who report to the first person and are below him in the organizational
+         * hierarchy.
          */
         if (nameONE.empty() || nameTWO.empty() || nameONE == "\t" || nameTWO == "\t"|| nameTWO == "\r" || nameONE == "\r"|| nameTWO == "\n" || nameTWO == "\n"|| nameONE == " " || nameTWO == " " ){
             throw invalid_argument("One or both of the strings are invalid");
@@ -27,8 +27,9 @@ namespace ariel {
         }
         return *this;
     }
-    //---------------------------------------------------------------
-    //---------Auxiliary functions for insertion functions-----------
+
+
+    //------------------------------------Auxiliary functions for insertion functions-----------------------------------
     bool OrgChart::LookForNode(Node *root, const string &father,const string &son) {
         /***
          * An auxiliary function that reports to the first person whether the second person is in the organizational hierarchy.
@@ -55,8 +56,9 @@ namespace ariel {
         root->Sons.push_back(temp);
         this->children.push_back(temp);
     }
-    //------------------------------------------------------------
-    //------------------------Iterators---------------------------
+
+
+    //-----------------------------------------------------Iterators----------------------------------------------------
     iterator OrgChart::begin_level_order() {
         if (this->root.Name.empty()) {
             throw runtime_error("This chart not exist");
@@ -112,7 +114,7 @@ namespace ariel {
         }
         return iterator();
     }
-    //-----------------operator<< and print-----------------------
+    //--------------------------------------operator<< and print--------------------------------------------------------
 
     string& OrgChart::print(string& oldString, const string& start, Node *node){
         /***

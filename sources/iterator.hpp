@@ -20,10 +20,9 @@ namespace ariel {
         vector<Node*> reverse;
         size_t index = 0;
     public:
-        //--------------------------------------------------------------------------------------------------------------
-        // constructors
-        //--------------------------------------------------------------------------------------------------------------
-        iterator():pointer_to_current_node(){}
+        //-------------------------------------------------constructors-------------------------------------------------
+
+        iterator():pointer_to_current_node(){this->pointer_to_current_node= nullptr;}
         iterator(Node* ptr,string State):pointer_to_current_node(ptr){
             this->state= std::move(State);
             if(state=="LevelOrder"){
@@ -37,9 +36,8 @@ namespace ariel {
                 this->preorder.push_back(ptr);
             }
         }
-        //--------------------------------------------------------------------------------------------------------------
-        // operators
-        //--------------------------------------------------------------------------------------------------------------
+        //---------------------------------------------------operators--------------------------------------------------
+
         string& operator*() const {
             if(this->pointer_to_current_node== nullptr){
                 throw ("The current pointer is null");
@@ -83,9 +81,7 @@ namespace ariel {
             return one.pointer_to_current_node != two.pointer_to_current_node;
         }
 
-        //--------------------------------------------------------------------------------------------------------------
-        // Operator Auxiliary Functions
-        //--------------------------------------------------------------------------------------------------------------
+        //---------------------------------------Operator Auxiliary Functions-------------------------------------------
         void PreorderTable(){
             /***
              * This function takes the sons of the root and inserts them in the order of Preorder
