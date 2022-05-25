@@ -13,30 +13,31 @@ namespace ariel {
         if (nameONE.empty() || nameTWO.empty() || nameONE == "\t" || nameTWO == "\t"|| nameTWO == "\r" || nameONE == "\r"|| nameTWO == "\n" || nameTWO == "\n"|| nameONE == " " || nameTWO == " " ){
             throw invalid_argument("One or both of the strings are invalid");
         }
-        if (!LookFor(&this->root, nameONE, nameTWO)) {
+        if (!LookForNode(&this->root, nameONE, nameTWO)) {
             throw runtime_error("The first person the Knesset does not exist in the organization tree!") ;
         }
         return *this;
     }
 
-    bool OrgChart::LookFor(Node *root, const string &father,const string &son) {
-    //check it the father is the root
-        bool ans=false;
-        if(root->Name==father){
-            Node* temp=new Node();
-            temp->Name=son;
-            root->Sons.push_back(temp);
-            this->children.push_back(temp);
-            ans=true;
+    bool OrgChart::LookForNode(Node *root, const string &father,const string &son) {
+        bool ans= false;
+        if(root->Name==father) { //check it the father is the root
+            AddNode(root, father,son);
+            ans= true;
         }
         else{//if the father is not the root we will look for him
             for(int i=0;i<root->Sons.size();++i){
-                if(LookFor(root->Sons.at((unsigned int)i),father, son)){
-                    return true;
-                }
-            }
+                if(LookForNode(root->Sons.at((unsigned int)i),father, son)){
+                    ans= true;
+                }}
         }
         return ans;
+    }
+    void OrgChart::AddNode(Node *root, const string &father, const string &son) {
+        Node* temp=new Node();
+        temp->Name=son;
+        root->Sons.push_back(temp);
+        this->children.push_back(temp);
     }
 
 
@@ -95,23 +96,19 @@ namespace ariel {
         }
         return iterator();
     }
-
-    //I used the website https://www.geeksforgeeks.org/introduction-iterators-c/
+     string& OrgChart::print(string& oldString, const string& start, Node *node){
+        oldString += start;
+        if(!oldString.empty()){oldString += "->";}
+        oldString = oldString+ node->Name+"\n";
+        for(int i = 0; i < node->Sons.size(); ++i){
+            print(oldString, start + "\t", (node->Sons[(size_t)i]));
+        }
+        return oldString;
+    }
     ostream &operator<<(ostream &output, OrgChart &start) {
-//        for (auto i = start.begin(); i != start.end(); ++i) {
-//            output << (*i) << " ";
-//            output << "->";
-//        }
-        output<<start.root.Name<<"->"<<endl;
-        for (int i = 0; i < start.root.Sons.size(); ++i) {
-        Node* curr = start.root.Sons.at((size_t)i);
-        output<<curr->Name<<"->"<<endl;
-        for (int j = 0; j < curr->Sons.size(); ++j) {
-            output<<(curr->Sons.at((size_t) j)->Name);
-            output << "->";
-        }
-        output<<"\n";
-        }
-        return  output;
+        if(start.root.Name.empty()){throw "Error:this OrgChart is empty";}
+        string oldString;
+        output << OrgChart::print(oldString, "", &start.root);
+        return output;
     }
 }

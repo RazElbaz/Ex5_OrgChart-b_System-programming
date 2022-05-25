@@ -14,7 +14,8 @@ namespace ariel {
         Node root;
         vector<Node*>children;
         int index;
-        bool LookFor(Node *root,const string &father,const string &son);
+        bool LookForNode(Node *root,const string &father,const string &son);
+        void AddNode(Node *root,const string &father,const string &son);
 
     public:
         //----------------------------------------
@@ -82,7 +83,7 @@ namespace ariel {
         OrgChart &add_root(string name);
         OrgChart &add_sub(const string &nameONE,const string &nameTWO);
         friend ostream &operator<<(ostream &output, OrgChart &start);
-        void print(Node &node, string s, bool isLast);
+        static string& print(string& oldString, const string& start, Node *node);
         Node getRoot() { return this->root;}
         //Return of iterator
         iterator begin_level_order();
